@@ -52,14 +52,29 @@ export const useTriageForm = () => {
       // Garante que o telefone comece com 55 se tiver 10 ou 11 dígitos
       const formattedPhone = phoneDigits.length <= 11 ? `55${phoneDigits}` : phoneDigits;
 
+      // Mapeamento explícito para garantir que todos os campos sejam enviados
       const payload = {
-        ...formData,
+        // Identificação
+        nome: formData.nome,
         whatsapp: formattedPhone,
-        motivo: formData.motivo === 'Outros' ? formData.motivo_outro : formData.motivo,
+        
+        // Respostas do Quiz
+        faixa_etaria: formData.faixa_etaria,
+        motivo_busca: formData.motivo === 'Outros' ? formData.motivo_outro : formData.motivo,
+        tempo_convivio: formData.tempo_convivio,
+        impacto_na_rotina: formData.impacto_rotina,
+        experiencia_anterior: formData.historico,
+        modalidade_preferida: formData.modalidade,
+        periodo_preferencia: formData.periodo,
         prontidao_mudanca: formData.comprometimento,
+        
+        // Metadados
         data_envio: now.toLocaleDateString('pt-BR'),
         hora_envio: now.toLocaleTimeString('pt-BR'),
-        timestamp: now.toISOString()
+        timestamp: now.toISOString(),
+        
+        // Objeto completo para redundância
+        raw_data: formData
       };
 
       await fetch(CONFIG.WEBHOOK_URL, {
@@ -72,7 +87,6 @@ export const useTriageForm = () => {
       localStorage.removeItem(STORAGE_KEY_DATA);
     } catch (error) {
       console.error('Submission error:', error);
-      // Fallback para garantir que o sucesso seja mostrado mesmo com erro de CORS no webhook
       setStep('success');
     } finally {
       setIsSubmitting(false);
