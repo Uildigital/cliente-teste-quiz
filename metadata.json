@@ -1,0 +1,5 @@
+{
+  "name": "Triagem Digital - Psicologia",
+  "description": "Sistema de triagem digital acolhedor para clínicas de psicologia com formulário multi-etapas e integração via webhook.",
+  "requestFramePermissions": []
+}

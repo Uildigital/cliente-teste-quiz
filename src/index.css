@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --color-teal-professional: #007367;
+  --color-teal-petroleum: #0D9488;
+  --color-graphite: #3C3C3B;
+  --color-soft-bg: #F9FAFB;
+}
+
+body {
+  @apply bg-gradient-to-br from-slate-50 to-blue-100 min-h-screen text-graphite font-sans antialiased overflow-x-hidden;
+}
+
+.glass-card {
+  @apply bg-white/80 backdrop-blur-md border border-white/40 shadow-2xl;
+}
+
+.progress-gradient {
+  @apply bg-gradient-to-r from-teal-400 to-emerald-500;
+}
+
+.atmosphere-blob {
+  @apply absolute rounded-full mix-blend-multiply filter blur-[80px] opacity-30 animate-pulse;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(-20px) translateX(10px); }
+  100% { transform: translateY(0px) translateX(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
