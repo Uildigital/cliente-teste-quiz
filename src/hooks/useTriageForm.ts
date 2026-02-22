@@ -44,28 +44,7 @@ export const useTriageForm = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   }, []);
 
-  const nextStep = useCallback(() => {
-    if (step === 'welcome') {
-      setStep(1);
-    } else if (typeof step === 'number') {
-      if (step < 9) setStep((step + 1) as StepId);
-      else submitForm();
-    }
-  }, [step]);
-
-  const prevStep = useCallback(() => {
-    if (step === 1) setStep('welcome');
-    else if (typeof step === 'number' && step > 1) setStep((step - 1) as StepId);
-  }, [step]);
-
-  const resetForm = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY_STEP);
-    localStorage.removeItem(STORAGE_KEY_DATA);
-    setStep('welcome');
-    setFormData(initialData);
-  }, []);
-
-  const submitForm = async () => {
+  const submitForm = useCallback(async () => {
     setIsSubmitting(true);
     try {
       const now = new Date();
@@ -98,7 +77,28 @@ export const useTriageForm = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [formData]);
+
+  const nextStep = useCallback(() => {
+    if (step === 'welcome') {
+      setStep(1);
+    } else if (typeof step === 'number') {
+      if (step < 9) setStep((step + 1) as StepId);
+      else submitForm();
+    }
+  }, [step, submitForm]);
+
+  const prevStep = useCallback(() => {
+    if (step === 1) setStep('welcome');
+    else if (typeof step === 'number' && step > 1) setStep((step - 1) as StepId);
+  }, [step]);
+
+  const resetForm = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY_STEP);
+    localStorage.removeItem(STORAGE_KEY_DATA);
+    setStep('welcome');
+    setFormData(initialData);
+  }, []);
 
   const isStepValid = useCallback(() => {
     const phoneDigits = formData.whatsapp.replace(/[^\d]/g, '');
