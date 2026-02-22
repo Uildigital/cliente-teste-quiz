@@ -68,20 +68,34 @@ export const useTriageForm = () => {
   const submitForm = async () => {
     setIsSubmitting(true);
     try {
-      await fetch(CONFIG.WEBHOOK_URL, {
+      // 1. O envio precisa ser LIMPO, sem 'no-cors'
+      const response = await fetch(CONFIG.WEBHOOK_URL, {
         method: 'POST',
-        
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify(formData),
       });
+
+      if (!response.ok) throw new Error('Falha no envio');
+
       setStep('success');
       localStorage.removeItem(STORAGE_KEY_STEP);
       localStorage.removeItem(STORAGE_KEY_DATA);
     } catch (error) {
       console.error('Submission error:', error);
-      const finalURL = `${CONFIG.WEBHOOK_URL}?data=${encodeURIComponent(JSON.stringify(formData))}`;
-      new Image().src = finalURL;
-      setStep('success');
+      
+      // 2. Se falhar, tentamos um fetch simples antes de desistir, 
+      // mas sem usar o truque da "new Image()" que quebra o JSON.
+      try {
+        await fetch(CONFIG.WEBHOOK_URL, {
+          method: 'POST',
+          body: JSON.stringify(formData),
+        });
+        setStep('success');
+      } catch (finalError) {
+        alert("Erro ao enviar dados. Verifique sua conexão.");
+      }
     } finally {
       setIsSubmitting(false);
     }
