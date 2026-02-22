@@ -80,14 +80,20 @@ export const SuccessStep: React.FC<{ nome: string; whatsapp: string; onReset: ()
   const handleSaveContact = async () => {
     // Envia evento para o webhook (Fiqon)
     try {
+      const now = new Date();
+      const phoneDigits = whatsapp.replace(/[^\d]/g, '');
+      const formattedPhone = phoneDigits.length <= 11 ? `55${phoneDigits}` : phoneDigits;
+
       fetch(CONFIG.WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           event: 'click_save_contact',
           nome,
-          whatsapp,
-          timestamp: new Date().toISOString()
+          whatsapp: formattedPhone,
+          data_evento: now.toLocaleDateString('pt-BR'),
+          hora_evento: now.toLocaleTimeString('pt-BR'),
+          timestamp: now.toISOString()
         }),
       });
     } catch (e) {

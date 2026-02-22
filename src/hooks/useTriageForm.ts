@@ -68,18 +68,31 @@ export const useTriageForm = () => {
   const submitForm = async () => {
     setIsSubmitting(true);
     try {
+      const now = new Date();
+      const phoneDigits = formData.whatsapp.replace(/[^\d]/g, '');
+      // Garante que o telefone comece com 55 se tiver 10 ou 11 dígitos
+      const formattedPhone = phoneDigits.length <= 11 ? `55${phoneDigits}` : phoneDigits;
+
+      const payload = {
+        ...formData,
+        whatsapp: formattedPhone,
+        motivo: formData.motivo === 'Outros' ? formData.motivo_outro : formData.motivo,
+        data_envio: now.toLocaleDateString('pt-BR'),
+        hora_envio: now.toLocaleTimeString('pt-BR'),
+        timestamp: now.toISOString()
+      };
+
       await fetch(CONFIG.WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       setStep('success');
       localStorage.removeItem(STORAGE_KEY_STEP);
       localStorage.removeItem(STORAGE_KEY_DATA);
     } catch (error) {
       console.error('Submission error:', error);
-      const finalURL = `${CONFIG.WEBHOOK_URL}?data=${encodeURIComponent(JSON.stringify(formData))}`;
-      new Image().src = finalURL;
+      // Fallback para garantir que o sucesso seja mostrado mesmo com erro de CORS no webhook
       setStep('success');
     } finally {
       setIsSubmitting(false);
