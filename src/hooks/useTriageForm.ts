@@ -77,6 +77,7 @@ export const useTriageForm = () => {
         ...formData,
         whatsapp: formattedPhone,
         motivo: formData.motivo === 'Outros' ? formData.motivo_outro : formData.motivo,
+        prontidao_mudanca: formData.comprometimento,
         data_envio: now.toLocaleDateString('pt-BR'),
         hora_envio: now.toLocaleTimeString('pt-BR'),
         timestamp: now.toISOString()
