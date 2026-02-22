@@ -82,7 +82,6 @@ export const SuccessStep: React.FC<{ nome: string; whatsapp: string; onReset: ()
     try {
       fetch(CONFIG.WEBHOOK_URL, {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           event: 'click_save_contact',
