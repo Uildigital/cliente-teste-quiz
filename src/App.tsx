@@ -62,8 +62,7 @@ export default function App() {
               {step === 'success' && (
                 <SuccessStep 
                   key="success"
-                  nome={formData.nome}
-                  whatsapp={formData.whatsapp}
+                  formData={formData}
                   onReset={resetForm}
                 />
               )}

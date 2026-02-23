@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { ArrowRight, CheckCircle2, ShieldCheck, Target, Heart, UserPlus } from 'lucide-react';
 import { Button } from '../ui/Buttons';
 import { CONFIG } from '../../config';
+import { formatWebhookPayload } from '../../utils/webhook';
+import { TriageFormData } from '../../types/triage';
 
 export const WelcomeStep: React.FC<{ onStart: () => void }> = ({ onStart }) => (
   <motion.div 
@@ -76,25 +78,21 @@ export const WelcomeStep: React.FC<{ onStart: () => void }> = ({ onStart }) => (
   </motion.div>
 );
 
-export const SuccessStep: React.FC<{ nome: string; whatsapp: string; onReset: () => void }> = ({ nome, whatsapp, onReset }) => {
+export const SuccessStep: React.FC<{ formData: TriageFormData; onReset: () => void }> = ({ formData, onReset }) => {
+  const [isSaving, setIsSaving] = React.useState(false);
+
   const handleSaveContact = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+    
     // Envia evento para o webhook (Fiqon)
     try {
-      const now = new Date();
-      const phoneDigits = whatsapp.replace(/[^\d]/g, '');
-      const formattedPhone = phoneDigits.length <= 11 ? `55${phoneDigits}` : phoneDigits;
+      const payload = formatWebhookPayload(formData, 'contact_saved');
 
       fetch(CONFIG.WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event: 'click_save_contact',
-          nome,
-          whatsapp: formattedPhone,
-          data_evento: now.toLocaleDateString('pt-BR'),
-          hora_evento: now.toLocaleTimeString('pt-BR'),
-          timestamp: now.toISOString()
-        }),
+        body: JSON.stringify(payload),
       });
     } catch (e) {
       console.error('Erro ao enviar evento:', e);
@@ -125,7 +123,7 @@ export const SuccessStep: React.FC<{ nome: string; whatsapp: string; onReset: ()
         
         <div className="space-y-4">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-teal-professional">
-            Sua jornada começa agora, <span className="text-teal-petroleum">{nome.split(' ')[0]}</span>.
+            Sua jornada começa agora, <span className="text-teal-petroleum">{formData.nome.split(' ')[0]}</span>.
           </h2>
           <div className="space-y-6 max-w-2xl mx-auto">
             <p className="text-lg sm:text-xl text-gray-600 font-medium">
