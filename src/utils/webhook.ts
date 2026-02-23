@@ -2,14 +2,25 @@ import { TriageFormData } from '../types/triage';
 
 export const formatWebhookPayload = (formData: TriageFormData, eventType: 'quiz_completed' | 'contact_saved') => {
   const now = new Date();
-  const phoneDigits = formData.whatsapp.replace(/[^\d]/g, '');
-  const formattedPhone = phoneDigits.length <= 11 ? `55${phoneDigits}` : phoneDigits;
+  let phoneDigits = formData.whatsapp.replace(/[^\d]/g, '');
+  
+  // Remove zero à esquerda se houver (comum no Brasil)
+  if (phoneDigits.startsWith('0')) {
+    phoneDigits = phoneDigits.substring(1);
+  }
+
+  // Se tiver 10 ou 11 dígitos, assume que é Brasil e adiciona 55
+  const formattedPhone = (phoneDigits.length === 10 || phoneDigits.length === 11) 
+    ? `55${phoneDigits}` 
+    : phoneDigits;
 
   return {
     event_type: eventType,
     // Identificação
     nome: formData.nome,
     whatsapp: formattedPhone,
+    phone: formattedPhone, // Alias para compatibilidade
+    number: formattedPhone, // Alias para compatibilidade
     
     // Respostas do Quiz
     faixa_etaria: formData.faixa_etaria,

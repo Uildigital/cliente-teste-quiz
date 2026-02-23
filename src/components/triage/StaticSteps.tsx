@@ -85,18 +85,8 @@ export const SuccessStep: React.FC<{ formData: TriageFormData; onReset: () => vo
     if (isSaving) return;
     setIsSaving(true);
     
-    // Envia evento para o webhook (Fiqon)
-    try {
-      const payload = formatWebhookPayload(formData, 'contact_saved');
-
-      fetch(CONFIG.WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-    } catch (e) {
-      console.error('Erro ao enviar evento:', e);
-    }
+    // Removido o envio de evento aqui para evitar duplicidade no Fiqon/Z-API
+    // O evento principal já é enviado ao completar o quiz.
 
     const message = encodeURIComponent(`Olá ${CONFIG.PSICOLOGO_NOME}, acabei de preencher a triagem e salvei seu contato para receber as opções de horários.`);
     window.open(`https://wa.me/${CONFIG.PSICOLOGO_WHATSAPP}?text=${message}`, '_blank');
