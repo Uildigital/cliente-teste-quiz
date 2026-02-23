@@ -15,12 +15,16 @@ export const formatWebhookPayload = (formData: TriageFormData, eventType: 'quiz_
     : phoneDigits;
 
   return {
+    event: eventType,
     event_type: eventType,
     // Identificação
     nome: formData.nome,
     whatsapp: formattedPhone,
     phone: formattedPhone, // Alias para compatibilidade
     number: formattedPhone, // Alias para compatibilidade
+    chatId: `${formattedPhone}@c.us`, // Formato comum para Z-API/WhatsApp
+    remoteJid: `${formattedPhone}@s.whatsapp.net`, // Formato comum para instâncias de WhatsApp
+    wa_id: formattedPhone, // Formato comum para APIs oficiais
     
     // Respostas do Quiz
     faixa_etaria: formData.faixa_etaria,
