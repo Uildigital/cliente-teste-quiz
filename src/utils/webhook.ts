@@ -16,15 +16,8 @@ export const formatWebhookPayload = (formData: TriageFormData, eventType: 'quiz_
 
   return {
     event: eventType,
-    event_type: eventType,
-    // Identificação
     nome: formData.nome,
-    whatsapp: formattedPhone,
-    phone: formattedPhone, // Alias para compatibilidade
-    number: formattedPhone, // Alias para compatibilidade
-    chatId: `${formattedPhone}@c.us`, // Formato comum para Z-API/WhatsApp
-    remoteJid: `${formattedPhone}@s.whatsapp.net`, // Formato comum para instâncias de WhatsApp
-    wa_id: formattedPhone, // Formato comum para APIs oficiais
+    whatsapp: Number(formattedPhone), // Enviado como número (não texto) para compatibilidade com Z-API/Fiqon
     
     // Respostas do Quiz
     faixa_etaria: formData.faixa_etaria,
@@ -39,9 +32,6 @@ export const formatWebhookPayload = (formData: TriageFormData, eventType: 'quiz_
     // Metadados
     data_envio: now.toLocaleDateString('pt-BR'),
     hora_envio: now.toLocaleTimeString('pt-BR'),
-    timestamp: now.toISOString(),
-    
-    // Objeto completo para redundância
-    raw_data: formData
+    timestamp: now.toISOString()
   };
 };
