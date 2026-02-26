@@ -9,5 +9,5 @@ export const CONFIG = {
   PSICOLOGO_ESPECIALIDADE: "Psicólogo Clínico - Especialista em TCC",
   PSICOLOGO_FOTO_URL: "https://images.unsplash.com/photo-1559839734-2b71f153678f?auto=format&fit=crop&q=80&w=600&h=600",
   PSICOLOGO_WHATSAPP: "5581920047133", // Formato: CódigoPaís + DDD + Número
-  WEBHOOK_URL: "http://localhost:5678/webhook/quiz-psi-v1",
+  WEBHOOK_URL: "https://few-signs-hunt.loca.lt/webhook/quiz-psi-v1",
 };
