@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { StepId, TriageFormData } from '../types/triage';
 import { CONFIG } from '../config';
+import { TRIAGE_STEPS } from '../constants/triageSteps';
 import { formatWebhookPayload } from '../utils/webhook';
 
 const STORAGE_KEY_STEP = 'triagem_step';
@@ -16,7 +17,6 @@ const initialData: TriageFormData = {
   impacto_rotina: '',
   historico: '',
   modalidade: '',
-  filtro_financeiro: '',
   periodo: '',
   comprometimento: ''
 };
@@ -33,6 +33,7 @@ export const useTriageForm = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
 
   useEffect(() => {
     if (step !== 'success') {
@@ -48,6 +49,7 @@ export const useTriageForm = () => {
   const submitForm = useCallback(async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+    setSubmitError(false);
     try {
       const payload = formatWebhookPayload(formData, 'quiz_completed');
 
@@ -61,7 +63,7 @@ export const useTriageForm = () => {
       localStorage.removeItem(STORAGE_KEY_DATA);
     } catch (error) {
       console.error('Submission error:', error);
-      setStep('success');
+      setSubmitError(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -71,7 +73,7 @@ export const useTriageForm = () => {
     if (step === 'welcome') {
       setStep(1);
     } else if (typeof step === 'number') {
-      if (step < 9) setStep((step + 1) as StepId);
+      if (step < TRIAGE_STEPS.length) setStep((step + 1) as StepId);
       else submitForm();
     }
   }, [step, submitForm]);
@@ -111,6 +113,7 @@ export const useTriageForm = () => {
     step,
     formData,
     isSubmitting,
+    submitError,
     updateField,
     nextStep,
     prevStep,

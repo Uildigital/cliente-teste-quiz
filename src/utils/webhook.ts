@@ -35,7 +35,6 @@ export const formatWebhookPayload = (formData: TriageFormData, eventType: 'quiz_
     experiencia_anterior: formData.historico.trim(),
     modalidade_preferida: formData.modalidade.trim(),
     periodo_preferencia: formData.periodo.trim(),
-    periodo: formData.periodo.trim(), // Alias para o exemplo do JSON
     prontidao_mudanca: formData.comprometimento.trim(),
     
     // Campos para Google Agenda / Automação

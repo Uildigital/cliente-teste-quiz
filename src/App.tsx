@@ -21,6 +21,7 @@ export default function App() {
     step,
     formData,
     isSubmitting,
+    submitError,
     updateField,
     nextStep,
     prevStep,
@@ -70,31 +71,38 @@ export default function App() {
           </div>
 
           {typeof step === 'number' && (
-            <footer className="mt-12 md:mt-16 flex items-center justify-between border-t border-teal-900/5 pt-8 md:pt-10">
-              <button 
-                onClick={prevStep}
-                className="flex items-center gap-2 text-gray-400 hover:text-teal-petroleum transition-all font-medium uppercase tracking-widest text-[10px]"
-              >
-                <ChevronLeft size={16} /> Voltar
-              </button>
-              
-              <Button 
-                onClick={nextStep} 
-                disabled={!isStepValid() || isSubmitting}
-                className="min-w-[160px] md:min-w-[180px]"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center gap-3">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Processando...
-                  </span>
-                ) : (
-                  <>
-                    {step === TRIAGE_STEPS.length ? 'Finalizar Triagem' : 'Continuar'} 
-                    {step === TRIAGE_STEPS.length ? <Send size={20} /> : <ChevronRight size={22} />}
-                  </>
-                )}
-              </Button>
+            <footer className="mt-12 md:mt-16 border-t border-teal-900/5 pt-8 md:pt-10 space-y-4">
+              {submitError && (
+                <p className="text-center text-sm text-red-500 font-medium">
+                  Ocorreu um erro ao enviar. Verifique sua conexão e tente novamente.
+                </p>
+              )}
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={prevStep}
+                  className="flex items-center gap-2 text-gray-400 hover:text-teal-petroleum transition-all font-medium uppercase tracking-widest text-[10px]"
+                >
+                  <ChevronLeft size={16} /> Voltar
+                </button>
+
+                <Button
+                  onClick={nextStep}
+                  disabled={!isStepValid() || isSubmitting}
+                  className="min-w-[160px] md:min-w-[180px]"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-3">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Processando...
+                    </span>
+                  ) : (
+                    <>
+                      {step === TRIAGE_STEPS.length ? 'Finalizar Triagem' : 'Continuar'}
+                      {step === TRIAGE_STEPS.length ? <Send size={20} /> : <ChevronRight size={22} />}
+                    </>
+                  )}
+                </Button>
+              </div>
             </footer>
           )}
         </div>

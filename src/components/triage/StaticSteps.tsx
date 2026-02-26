@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import { ArrowRight, CheckCircle2, ShieldCheck, Target, Heart, UserPlus } from 'lucide-react';
 import { Button } from '../ui/Buttons';
 import { CONFIG } from '../../config';
-import { formatWebhookPayload } from '../../utils/webhook';
 import { TriageFormData } from '../../types/triage';
 
 export const WelcomeStep: React.FC<{ onStart: () => void }> = ({ onStart }) => (
@@ -84,12 +83,12 @@ export const SuccessStep: React.FC<{ formData: TriageFormData; onReset: () => vo
   const handleSaveContact = async () => {
     if (isSaving) return;
     setIsSaving(true);
-    
-    // Removido o envio de evento aqui para evitar duplicidade no Fiqon/Z-API
-    // O evento principal já é enviado ao completar o quiz.
-
-    const message = encodeURIComponent(`Olá ${CONFIG.PSICOLOGO_NOME}, acabei de preencher a triagem e salvei seu contato para receber as opções de horários.`);
-    window.open(`https://wa.me/${CONFIG.PSICOLOGO_WHATSAPP}?text=${message}`, '_blank');
+    try {
+      const message = encodeURIComponent(`Olá ${CONFIG.PSICOLOGO_NOME}, acabei de preencher a triagem e salvei seu contato para receber as opções de horários.`);
+      window.open(`https://wa.me/${CONFIG.PSICOLOGO_WHATSAPP}?text=${message}`, '_blank');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (

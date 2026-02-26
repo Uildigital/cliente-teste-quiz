@@ -12,7 +12,6 @@ export interface TriageFormData {
   impacto_rotina: string;
   historico: string;
   modalidade: string;
-  filtro_financeiro: string;
   periodo: string;
   comprometimento: string;
 }
